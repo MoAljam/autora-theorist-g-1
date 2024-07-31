@@ -41,7 +41,7 @@ def fit_measure(equation, condition, observation):
     # print("## observation: ", observation)
 
     y = np.apply_along_axis(equation, 1, condition)
-    return np.mean((y - observation) ** 2)
+    return np.mean((y - observation) ** 2) ## leaving this for moh to fix.XD 
 
 
 class CustomMCMC(BaseEstimator):

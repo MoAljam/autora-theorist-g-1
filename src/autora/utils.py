@@ -12,7 +12,7 @@ def print_equation(equation, operator_space) -> str:
         if not equation[i] in operator_space:
             variable_stack.append(equation[i])
         else:
-            print("## variable_stack: ", variable_stack)
+            # print("## variable_stack: ", variable_stack)
             if operator_space[equation[i]] == 1:
                 equation_str ="(" + equation[i] + "("+variable_stack.pop()+")" + ")"
             else:
@@ -31,7 +31,7 @@ def equation_evaluator(equation, operator_space, variable_space, data):
     # print("## operator_space: ", operator_space)
     # print("## variable_space: ", variable_space)
     # print("## data: ", data)
-    print("##> ",type(equation), " > ", equation)
+    # print("##> ",type(equation), " > ", equation)
     i = len(equation) - 1
     while i>=0:
         if not equation[i] in operator_space:
