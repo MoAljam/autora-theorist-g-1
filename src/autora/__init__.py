@@ -33,11 +33,11 @@ class ExampleRegressor(BaseEstimator):
       #defined the variable space
       # cons: constant
       # eqn: is another equation, will cause a child fit process to run. 
-      self.variable_space = ['cons', 'eqn']
+      self.temp_variable_space = ['cons', 'eqn']
 
     def fit(self, x, y):
       #add independant variables to varable_space
-      self.variable_space += x
+      self.variable_space = x + self.temp_variable_space
 
       features = self.poly.fit_transform(x, y)
       self.model.fit(features, y)
