@@ -28,10 +28,17 @@ class ExampleRegressor(BaseEstimator):
     """
 
     def __init__(self, degree: int = 3):
-      self.poly = PolynomialFeatures(degree=degree, include_bias=False)
-      self.model = LinearRegression()
+      # define the operator space
+      self.operator_space = ['+', '-', '*', '/', 'exp', 'ln', 'pow']
+      #defined the variable space
+      # cons: constant
+      # eqn: is another equation, will cause a child fit process to run. 
+      self.temp_variable_space = ['cons', 'eqn']
 
     def fit(self, x, y):
+      #add independant variables to varable_space
+      self.variable_space = x + self.temp_variable_space
+
       features = self.poly.fit_transform(x, y)
       self.model.fit(features, y)
       return self
