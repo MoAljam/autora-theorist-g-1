@@ -1,7 +1,7 @@
 import numpy as np
 import random
 
-def node_addition(curr_equation, operator_space, variable_space):
+def node_replacement(curr_equation, operator_space, variable_space):
     """
     input: array with current equation in prefix notation
     output: array with updated equation in prefix notation, i.e. with added node
