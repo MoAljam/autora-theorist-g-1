@@ -10,15 +10,15 @@ def node_replacement(curr_equation, operator_space, variable_space):
     array with updated equation in prefix notation, i.e. with added node
 
     Example:
-        >>> np.random.seed(42)
-        >>> curr_equation = ['+', '2', '1']
-        >>> operator_space = {'+': 2, '-': 2, '*':2, '/':2, 'exp':1, 'ln':1, 'pow':2}
-        >>> variable_space = ['cons', 'eqn', '1', '2', 'null']
-        >>> node_replacement(curr_equation, operator_space, variable_space)
+        >>> #np.random.seed(42)
+        >>> #curr_equation = ['+', '2', '1']
+        >>> #operator_space = {'+': 2, '-': 2, '*':2, '/':2, 'exp':1, 'ln':1, 'pow':2}
+        >>> #variable_space = ['cons', 'eqn', '1', '2']
+        >>> #node_replacement(curr_equation, operator_space, variable_space)
         ['+', '2', '2']
     """
 
-    np.random.seed(42)
+    #np.random.seed(42)
     replace_pos = np.random.randint(0, len(curr_equation))
 
     if curr_equation[replace_pos] in operator_space:
@@ -59,5 +59,32 @@ def root_addition(curr_equation, operator_space, variable_space):
         # Add a new variable to the end of the equation if the operator arity is 2
         new_equation = new_equation+ get_variable(count=1, variable_space=variable_space)
        
+
+    return new_equation
+
+def root_removal(curr_equation, operator_space, variable_space):
+    """
+    Example:
+        >>> #np.random.seed(42)
+        >>> #curr_equation = ['+', '2', '1']
+        >>> #operator_space = {'+': 2, '-': 2, '*':2, '/':2, 'exp':1, 'ln':1, 'pow':2}
+        >>> #variable_space = ['cons', 'eqn', '1', '2']
+        >>> #root_removal(curr_equation, operator_space, variable_space)
+        ['+', '2', '1']
+    """
+
+    #np.random.seed(42)
+    new_equation = curr_equation.copy()
+    # check number of arguments operator at root is expecting
+
+    # remove operator at root
+    if operator_space.get(curr_equation[0]) == 1:
+        del new_equation[0]
+
+    # if operator at root expects only one argument, new equation is done
+    # if operator at root expects two arguments, remove operator and right child
+    # TO DO: figure out how to remove right child
+    if operator_space.get(curr_equation[0]) == 2:
+        pass
 
     return new_equation
