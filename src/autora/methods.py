@@ -7,7 +7,7 @@ def get_variable(variable_space, count=1):
         variables = np.random.sample(variable_space)
     return variables
 
-def node_addition(curr_equation, operator_space, variable_space):
+def root_addition(curr_equation, operator_space, variable_space):
 
     
     # Randomly choose an operator to add
