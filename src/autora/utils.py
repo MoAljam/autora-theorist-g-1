@@ -21,12 +21,12 @@ def print_equation(equation, operator_space) -> str:
 def equation_evaluator(equation, operator_space, variable_space, data) -> int | float|np.array:
 #Union[int, float, nd.ndarray]:
     stack = []
-    variables = []
 
     for i in equation[::-1]:
         if not i in operator_space:
             stack.append(data[i])
         else:
+            variables = []
             for j in range(0, operator_space[i]):
                 variables.append(stack.pop)
                 j+=1
