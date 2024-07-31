@@ -1,8 +1,8 @@
 """
 Example Theorist
 """
-from .utils import print_equation, equation_evaluator, random_equation
-from .methods import node_replacement, get_variable, root_addition
+from utils import print_equation, equation_evaluator, random_equation
+from methods import node_replacement, get_variable, root_addition
 from typing import Union
 
 import numpy as np
@@ -36,9 +36,9 @@ def fit_measure(equation, condition, observation):
     if condition.ndim == 1:
         condition = condition[:, np.newaxis]
     # mean squared error
-    print("## equation: ", equation)
-    print("## condition: ", condition)
-    print("## observation: ", observation)
+    # print("## equation: ", equation)
+    # print("## condition: ", condition)
+    # print("## observation: ", observation)
 
     y = np.apply_along_axis(equation, 1, condition)
     return np.mean((y - observation) ** 2)
@@ -66,6 +66,8 @@ class CustomMCMC(BaseEstimator):
     def fit(self, conditions: Union[pd.DataFrame, np.ndarray], observations: Union[pd.DataFrame, np.ndarray],
             max_iterations: int=100):
         #add independant variables to varable_space
+        
+
         x = None
         if isinstance(conditions, np.ndarray) and conditions.ndim == 1:
             conditions = conditions[:, np.newaxis]
@@ -91,14 +93,15 @@ class CustomMCMC(BaseEstimator):
         self.variable_space = idvs_names + self.temp_variable_space
 
         rand_eqn = random_equation(self.operator_space, self.variable_space, min_length=5, max_length=10)
-        rand_eqn = ['ln', "/",'cons', idvs_names[0]]
+        # rand_eqn = ['ln', "/",'cons', idvs_names[0]]
         eqn_old = EquationFunction(rand_eqn, idvs_names, self.operator_space, self.variable_space)
+
         fit_old = fit_measure(eqn_old, x, y)
 
         # basic MCMC algorithm
         for _ in range(max_iterations):
             # sample a new equation
-            if np.random.rand() > 0.5:
+            if np.random.rand() < 0.5:
                 eqn = node_replacement(eqn_old.equation, self.operator_space, self.variable_space)
             else:
                 eqn = root_addition(eqn_old.equation, self.operator_space, self.variable_space)
