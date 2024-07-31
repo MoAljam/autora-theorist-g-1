@@ -1,3 +1,5 @@
+import numpy as np
+import math
 
 def print_equation(equation, operator_space) -> str:
     equation_str = ""
@@ -10,9 +12,13 @@ def print_equation(equation, operator_space) -> str:
         if not equation[i] in operator_space:
             variable_stack.append(equation[i])
         else:
-            equation_str ="(" + variable_stack.pop() + equation[i] + variable_stack.pop() + ")"
+            print("## variable_stack: ", variable_stack)
+            if operator_space[equation[i]] == 1:
+                equation_str ="(" + equation[i] + "("+variable_stack.pop()+")" + ")"
+            else:
+                equation_str ="(" + variable_stack.pop() + equation[i] + variable_stack.pop() + ")"
             variable_stack.append(equation_str)
-            i -= 1
+        i -=1
     return equation_str
 
 
@@ -25,41 +31,44 @@ def equation_evaluator(equation, operator_space, variable_space, data):
     # print("## operator_space: ", operator_space)
     # print("## variable_space: ", variable_space)
     # print("## data: ", data)
-    for i in equation[::-1]:
-        if not i in operator_space:
-            if i == "eqn":
+    print("##> ",type(equation), " > ", equation)
+    i = len(equation) - 1
+    while i>=0:
+        if not equation[i] in operator_space:
+            if equation[i] == "eqn":
                 stack.append(2)
-            elif i == "cons":
+            elif equation[i] == "cons":
                 stack.append(np.random.randint(2,10))
             else:
-                stack.append(data[i])
+                stack.append(data[equation[i]])
         else:
             variables = []
             # print("## stack: ", stack)
-            for j in range(0, operator_space[i]):
+            for j in range(0, operator_space[equation[i]]):
                 variables.append(stack.pop())
                 j+=1
             # print("## variables: ", variables)
             # exit()
-            if i == '+':
+            if equation[i] == '+':
                 stack.append((variables[0] + variables[1]))
-            elif i == '-':
+            elif equation[i] == '-':
                 stack.append((variables[0] - variables[1]))
-            elif i == '*':
+            elif equation[i] == '*':
                 stack.append((variables[0] * variables[1]))
-            elif i == '/':
+            elif equation[i] == '/':
                 stack.append((variables[0] / variables[1]))
-            elif i == 'exp':
+            elif equation[i] == 'exp':
                 stack.append(np.exp(variables[0]))
-            elif i == 'ln':
+            elif equation[i] == 'ln':
                 stack.append(np.log(variables[0]))
-            elif i == 'pow':
+            elif equation[i] == 'pow':
                 stack.append(np.power(variables[0] ,variables[1]))
+        i -=1
     if not stack:
         return None
     return stack.pop()
 
-def random_equation(operator_space, variable_space, min_length=5, max_length=100):
+def random_equation(operator_space, variable_space, min_length=5, max_length=10):
     # generate a randome equation with prefix notation
     # max length can be exceeded
     root = np.random.choice(list(operator_space.keys()))
