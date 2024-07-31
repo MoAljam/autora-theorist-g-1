@@ -29,7 +29,7 @@ class ExampleRegressor(BaseEstimator):
 
     def __init__(self, degree: int = 3):
       # define the operator space
-      self.operator_space = ['+', '-', '*', '/', 'exp', 'ln', 'pow']
+      self.operator_space = {'+': 2, '-': 2, '*':2, '/':2, 'exp':1, 'ln':1, 'pow':2}
       #defined the variable space
       # cons: constant
       # eqn: is another equation, will cause a child fit process to run. 
