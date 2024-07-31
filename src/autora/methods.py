@@ -39,3 +39,10 @@ def node_replacement(curr_equation, operator_space, variable_space):
     new_equation[replace_pos] = replace_node
 
     return new_equation
+
+
+def get_variable(variable_space, count=1):
+    variables = []
+    for i in range(0, count):
+        variables = np.random.sample(variable_space)
+    return variables
