@@ -2,7 +2,7 @@
 Example Theorist
 """
 from .utils import print_equation, equation_evaluator, random_equation
-from .methods import node_replacement, get_variable
+from .methods import node_replacement, get_variable, root_addition
 from typing import Union
 
 import numpy as np
@@ -98,7 +98,11 @@ class CustomMCMC(BaseEstimator):
         # basic MCMC algorithm
         for _ in range(max_iterations):
             # sample a new equation
-            eqn = node_replacement(eqn_old.equation, self.operator_space, self.variable_space)
+            if np.random.rand() > 0.5:
+                eqn = node_replacement(eqn_old.equation, self.operator_space, self.variable_space)
+            else:
+                eqn = root_addition(eqn_old.equation, self.operator_space, self.variable_space)
+            # eqn = node_replacement(eqn_old.equation, self.operator_space, self.variable_space)
             eqn_new = EquationFunction(eqn, idvs_names, self.operator_space, self.variable_space)
             # eqn_new = sample_equation()
             # calculate the fit measure
