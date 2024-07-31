@@ -30,9 +30,9 @@ class ExampleRegressor(BaseEstimator):
     def __init__(self, degree: int = 3):
       # define the operator space
       self.operator_space = ['+', '-', '*', '/', 'exp', 'ln', 'pow']
-      #defind the variable space
-      # cons: constand
-      # equ: is another equation, will cause a child fit process to run. 
+      #defined the variable space
+      # cons: constant
+      # eqn: is another equation, will cause a child fit process to run. 
       self.variable_space = ['cons', 'eqn']
 
     def fit(self, x, y):
