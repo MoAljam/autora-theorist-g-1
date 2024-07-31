@@ -10,15 +10,15 @@ def node_replacement(curr_equation, operator_space, variable_space):
     array with updated equation in prefix notation, i.e. with added node
 
     Example:
-        >>> np.random.seed(42)
-        >>> curr_equation = ['+', '2', '1']
-        >>> operator_space = {'+': 2, '-': 2, '*':2, '/':2, 'exp':1, 'ln':1, 'pow':2}
-        >>> variable_space = ['cons', 'eqn', '1', '2', 'null']
-        >>> node_replacement(curr_equation, operator_space, variable_space)
+        >>> #np.random.seed(42)
+        >>> #curr_equation = ['+', '2', '1']
+        >>> #operator_space = {'+': 2, '-': 2, '*':2, '/':2, 'exp':1, 'ln':1, 'pow':2}
+        >>> #variable_space = ['cons', 'eqn', '1', '2', 'null']
+        >>> #node_replacement(curr_equation, operator_space, variable_space)
         ['+', '2', '2']
     """
 
-    np.random.seed(42)
+    #np.random.seed(42)
     replace_pos = np.random.randint(0, len(curr_equation))
 
     if curr_equation[replace_pos] in operator_space:
@@ -47,18 +47,28 @@ def get_variable(variable_space, count=1):
   
 
 def root_addition(curr_equation, operator_space, variable_space):
+    """"
+    Example:
+        >>> #np.random.seed(42)
+        >>> #curr_equation = ['+', '2', '1']
+        >>> #operator_space = {'+': 2, '-': 2, '*':2, '/':2, 'exp':1, 'ln':1, 'pow':2}
+        >>> #variable_space = ['cons', 'eqn', '1', '2']
+        >>> #root_addition(curr_equation, operator_space, variable_space)
+        ['pow', '+', '2', '1', '2']
+    """
 
-    
+    #np.random.seed(42)
+
     # Randomly choose an operator to add
     new_operator = np.random.choice(list(operator_space.keys()))
     operator_type = operator_space[new_operator]
     
     # Add the new operator to the beginning of the equation
-    new_equation = [new_operator] + curr_equation
+    new_equation = [new_operator] + curr_equation.copy()
     
     if operator_type == 2:
         # Add a new variable to the end of the equation if the operator arity is 2
-        new_equation = new_equation.insert(0,get_variable(count=1, variable_space=variable_space))
+        new_equation = new_equation + [(np.random.choice(variable_space))]
        
 
     return new_equation
