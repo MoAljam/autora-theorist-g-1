@@ -107,7 +107,7 @@ class CustomMCMC(BaseEstimator):
             elif methods_sampler == 'root_addition':
                 eqn = root_addition(eqn_old.equation, self.operator_space, self.variable_space)
             elif methods_sampler == 'root_removal':
-                eqn = root_addition(eqn_old.equation, self.operator_space, self.variable_space)
+                eqn = root_removal(eqn_old.equation, self.operator_space, self.variable_space)
             else:
                 eqn = eqn_old.equation
 
