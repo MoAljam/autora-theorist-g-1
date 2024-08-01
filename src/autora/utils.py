@@ -19,6 +19,7 @@ def print_equation(equation, operator_space) -> str:
                 equation_str ="(" + variable_stack.pop() + equation[i] + variable_stack.pop() + ")"
             variable_stack.append(equation_str)
         i -=1
+    print("print Equation->number of symbols= ", len(equation))
     return equation_str
 
 
