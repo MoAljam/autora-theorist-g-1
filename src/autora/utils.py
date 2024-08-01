@@ -69,7 +69,7 @@ def equation_evaluator(equation, operator_space, variable_space, data):
                 else:
                     return(-math.inf)
             elif equation[i] == 'pow':
-                stack.append(np.power(variables[0] ,variables[1]))
+                stack.append(np.float_power(variables[0] ,variables[1]))
         i -=1
     if not stack:
         return None
