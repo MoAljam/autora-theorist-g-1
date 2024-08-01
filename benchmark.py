@@ -135,11 +135,6 @@ if __name__ == "__main__":
     print("******* MSE model 0: ", mse_model_0)
     print("******* model 0: ", my_theorist.model.equation)
 
-    mse_model_0 = benchmark(experiment_runner = stevens_power_law(), theorist = my_theorist)
-
-    print("******* MSE model 0: ", mse_model_0)
-    print("******* model 0: ", my_theorist.model.equation)
-
     mse_model_1 = benchmark(experiment_runner = exp_learning(), theorist = my_theorist)
 
     print("******* MSE model 1: ", mse_model_1)
