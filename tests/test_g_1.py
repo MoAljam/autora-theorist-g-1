@@ -1,7 +1,7 @@
-from autora.theorist.g_1 import ExampleRegressor
+from autora.theorist.g_1 import CustomMCMC
 
 def test():
-    theorist = ExampleRegressor()
+    theorist = CustomMCMC()
     assert theorist is not None
 
 

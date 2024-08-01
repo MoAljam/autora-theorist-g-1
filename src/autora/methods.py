@@ -41,23 +41,34 @@ def node_replacement(curr_equation, operator_space, variable_space):
 def get_variable(variable_space, count=1):
     variables = []
     for i in range(0, count):
-        variables = np.random.sample(variable_space)
+        variables = np.random.choice(variable_space)
+    print(variables)
     return variables
   
 
 def root_addition(curr_equation, operator_space, variable_space):
+    """"
+    Example:
+        >>> #np.random.seed(42)
+        >>> #curr_equation = ['+', '2', '1']
+        >>> #operator_space = {'+': 2, '-': 2, '*':2, '/':2, 'exp':1, 'ln':1, 'pow':2}
+        >>> #variable_space = ['cons', 'eqn', '1', '2']
+        >>> #root_addition(curr_equation, operator_space, variable_space)
+        ['pow', '+', '2', '1', '2']
+    """
 
-    
+    #np.random.seed(42)
+
     # Randomly choose an operator to add
     new_operator = np.random.choice(list(operator_space.keys()))
     operator_type = operator_space[new_operator]
     
     # Add the new operator to the beginning of the equation
-    new_equation = [new_operator] + curr_equation
+    new_equation = [new_operator] + curr_equation.copy()
     
     if operator_type == 2:
         # Add a new variable to the end of the equation if the operator arity is 2
-        new_equation = new_equation+ get_variable(count=1, variable_space=variable_space)
+        new_equation = new_equation + [(np.random.choice(variable_space))]
        
 
     return new_equation
