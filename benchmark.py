@@ -1,21 +1,16 @@
-# autora state
 # from autora.state import StandardState, on_state, Delta
 from src.autora.theorist.g_1 import CustomMCMC
 
-import autora.experimentalist
+import autora.state as state
 # experiment_runner
 from autora.experiment_runner.synthetic.psychophysics.weber_fechner_law import weber_fechner_law
 from autora.experiment_runner.synthetic.psychophysics.stevens_power_law import stevens_power_law
 from autora.experiment_runner.synthetic.economics.expected_value_theory import expected_value_theory
-
-
 # experimentalist
 from autora.experimentalist.grid import grid_pool
 from autora.experimentalist.random import random_pool, random_sample
-
 # data handling
 from sklearn.model_selection import train_test_split
-
 from sklearn.preprocessing import PolynomialFeatures
 from sklearn.linear_model import LinearRegression
 
@@ -55,9 +50,11 @@ def benchmark(experiment_runner, theorist):
 
     print("#### PREDICTIONS:")
     print(predictions)
+    print("#### pridections shape: ", predictions.shape)
+
     # evaluate theorist performance
-    error = (predictions - observations_test).pow(2)
-    error = error.mean()
+    error = np.power(predictions - observations_test.values, 2)
+    error = np.mean(error)
 
     #check if the theorist has a print_eqn method
     if hasattr(theorist, 'print_eqn'):
@@ -69,7 +66,6 @@ def benchmark(experiment_runner, theorist):
 
     experiment_runner.plotter(model=theorist)
     plt.show()
-
 
 class PolynomialRegressor:
     """
@@ -110,7 +106,6 @@ class PolynomialRegressor:
             print(equation)
 
 
-
 if __name__ == "__main__":
 
     my_theorist = CustomMCMC()
@@ -119,6 +114,6 @@ if __name__ == "__main__":
     # run benchmark
     benchmark(experiment_runner = stevens_power_law(), theorist = my_theorist)
     # run benchmark
-    benchmark(experiment_runner = weber_fechner_law(), theorist = my_theorist)
-    # run benchmark
-    benchmark(experiment_runner = expected_value_theory(), theorist = my_theorist)
+    # benchmark(experiment_runner = weber_fechner_law(), theorist = my_theorist)
+    # # run benchmark
+    # benchmark(experiment_runner = expected_value_theory(), theorist = my_theorist)
