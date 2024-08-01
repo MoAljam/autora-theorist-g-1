@@ -36,7 +36,7 @@ def sample_equation_raw(curr_equation, operator_space, variable_space):
 
     # method = np.random.choice(tree_modification_methods)
     # give higher probability to node_removel
-    method = np.random.choice(tree_modification_methods , p=[0.4, 0.3, 0.3])
+    method = np.random.choice(tree_modification_methods , p=[0.55, 0.05, 0.4])
     print("## method: ", method.__name__)
     eqn = method(curr_equation, operator_space, variable_space)
     return eqn
@@ -62,10 +62,11 @@ class CustomMCMC(BaseEstimator):
     """
     Custom MCMC model
     """
-    def __init__(self, max_eqn_length=20):
+    def __init__(self, max_eqn_length=20, max_iterations=100):
         # base equation of the model
         # define the operator space
         self.max_eqn_length = max_eqn_length
+        self.max_iterations = max_iterations
         self.operator_space = {'+': 2, '-': 2, '*':2, '/':2, 'exp':1, 'ln':1, 'pow':2}
         # self.operator_space = {'+': 2, '-': 2, '*':2, '/':2, 'exp':1, 'ln':1, 'pow':2, 'cons':0}
 
@@ -80,8 +81,7 @@ class CustomMCMC(BaseEstimator):
         self.model = None
 
 
-    def fit(self, conditions: Union[pd.DataFrame, np.ndarray], observations: Union[pd.DataFrame, np.ndarray],
-            max_iterations: int=1000):
+    def fit(self, conditions: Union[pd.DataFrame, np.ndarray], observations: Union[pd.DataFrame, np.ndarray]):
         #add independant variables to varable_space
         
 
@@ -107,7 +107,11 @@ class CustomMCMC(BaseEstimator):
             dvs_names = [f'x_{i}' for i in range(observations.shape[1])]
             y = observations
 
-        self.variable_space = idvs_names + self.temp_variable_space
+        # Danger
+        # Danger
+        self.variable_space = idvs_names + self.temp_variable_space ## DO NOT TOUCHT, VERY CRITICAL INTERNAL
+        # Danger
+        # Danger
 
         rand_eqn_raw = random_equation(self.operator_space, self.variable_space, min_length=2, max_length=5)
         # rand_eqn = ['ln', "/",'cons', idvs_names[0]]
@@ -117,8 +121,11 @@ class CustomMCMC(BaseEstimator):
 
         fit_values = [fit_old]
         # basic MCMC algorithm
-        for _ in range(max_iterations):
-            if len(eqn_old.equation) > self.max_eqn_length:
+        for i in range(self.max_iterations):
+            print("##--------------------- iteration: ", i)
+            len_eqn = len(eqn_old.equation)
+            print("## len_eqn: ", len_eqn)
+            if len_eqn > self.max_eqn_length:
                 eqn_raw =root_removal(eqn_old.equation, self.operator_space, self.variable_space)
             else:
                 # sample a new equation
@@ -133,7 +140,7 @@ class CustomMCMC(BaseEstimator):
                 acceptance_prob = np.exp(fit_new - fit_old)
             except:
                 acceptance_prob = 0
-
+            print("## acceptance_prob: ", acceptance_prob)
             # accept the new equation with the acceptance probability
             if np.random.rand() < acceptance_prob:
                 eqn_old = eqn_new

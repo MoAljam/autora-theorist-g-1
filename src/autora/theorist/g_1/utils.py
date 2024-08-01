@@ -1,13 +1,19 @@
 import numpy as np
-import math
-
-import numpy as np
-import math
+from numbers import Number
 
 np.seterr(all='raise')
 
 RANGE_CONSTANTS = (0.5, 3)
 RANGE_EQN = RANGE_CONSTANTS
+def replace_cons_eqn(equation):
+    for i in range(0, len(equation)):
+        # if equation[i] == 'eqn':
+        # #     equation[i] = random_equation(equation, equation, min_length=3, max_length=10)
+        # elif equation[i] == 'cons':
+        if equation[i] == 'cons':
+            equation[i] = str(np.random.uniform(*RANGE_CONSTANTS))
+    return equation
+
 def equation_evaluator(equation, operator_space, variable_space, data):
     """
     Evaluates an equation in prefix notation with error handling for edge cases.
@@ -66,10 +72,10 @@ def equation_evaluator(equation, operator_space, variable_space, data):
             stack.append(result)
         else:
             # Handle variables and constants
-            if token == "cons":
-                stack.append(np.random.uniform(*RANGE_CONSTANTS))  # Assign a random constant if 'cons'
-            elif token == "eqn":
-                stack.append(*RANGE_EQN)  # Example value for 'eqn', adjust as needed
+            if token.replace('.','',1).isdigit():
+                stack.append(float(token))  # Assign a random constant if 'cons'
+            # elif token == "eqn":
+            #     stack.append(*RANGE_EQN)  # Example value for 'eqn', adjust as needed
             else:
                 stack.append(data[token])  # Use the value from the data dictionary
         i -= 1
@@ -129,6 +135,7 @@ def random_equation(operator_space, variable_space, min_length=5, max_length=10)
     
     # print("-"*30)
     # print("## final eq: ", equation,"### final open_counter: ", open_counter)
+    equation = replace_cons_eqn(equation)
 
     return equation
 
@@ -194,12 +201,3 @@ if __name__ == "__main__":
     variable_space = ['X', 'Y', 'cons']
     equation = random_equation(operator_space, variable_space)
     print("Random Equation:", equation)
-
-
-def replace_cons_eqn(equation):
-    for i in range(0, len(equation)):
-        if equation[i] == 'eqn':
-            equation[i] = random_equation(equation, equation, min_length=3, max_length=10)
-        elif equation[i] == 'cons':
-            equation[i] = np.random.random()
-    return equation

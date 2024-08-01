@@ -1,5 +1,5 @@
+from .utils import random_equation, replace_cons_eqn
 import numpy as np
-from utils import random_equation, replace_cons_eqn
 
 def node_replacement(curr_equation, operator_space, variable_space):
     """
@@ -43,6 +43,7 @@ def node_replacement(curr_equation, operator_space, variable_space):
     return new_equation
 
 def get_variable(variable_space, count=1):
+    
     variables = []
     for i in range(0, count):
         variables = np.random.choice(variable_space)
