@@ -84,7 +84,7 @@ def root_removal(curr_equation, operator_space, variable_space):
     # if operator at root expects only one argument, new equation is done
     # if operator at root expects two arguments, remove operator and right child
     # TO DO: figure out how to remove right child
-    if operator_space.get(curr_equation[0]) == 2:
+    else: #operator_space.get(curr_equation[0]) == 2:
         pass
 
     return new_equation
