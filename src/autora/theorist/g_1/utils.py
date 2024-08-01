@@ -76,7 +76,6 @@ def equation_evaluator(equation, operator_space, variable_space, data):
 
     return stack.pop() if stack else None
 
-
 def random_equation(operator_space, variable_space, min_length=5, max_length=10):
     # generate a randome equation with prefix notation
     # max length can be exceeded
@@ -107,6 +106,7 @@ def random_equation(operator_space, variable_space, min_length=5, max_length=10)
     # print("-"*30)
     # print("## intermidiate eq: ", equation ### intermidiate open_counter: ", open_counter)
     # fill the rest of the equation with variables
+    
     # for _ in range(open_counter):
     #     equation.append(np.random.choice(variable_space))
     # prune the equation until the open_counter is zero (valid equation)
@@ -194,3 +194,12 @@ if __name__ == "__main__":
     variable_space = ['X', 'Y', 'cons']
     equation = random_equation(operator_space, variable_space)
     print("Random Equation:", equation)
+
+
+def replace_cons_eqn(equation):
+    for i in range(0, len(equation)):
+        if equation[i] == 'eqn':
+            equation[i] = random_equation(equation, equation, min_length=3, max_length=10)
+        elif equation[i] == 'cons':
+            equation[i] = np.random.random()
+    return equation
