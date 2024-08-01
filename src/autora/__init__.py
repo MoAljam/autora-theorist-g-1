@@ -2,7 +2,7 @@
 Example Theorist
 """
 from utils import print_equation, equation_evaluator, random_equation
-from methods import node_replacement, get_variable, root_addition
+from methods import node_replacement, get_variable, root_addition, root_removal
 from typing import Union
 
 import numpy as np
@@ -41,7 +41,7 @@ def fit_measure(equation, condition, observation):
     # print("## observation: ", observation)
 
     y = np.apply_along_axis(equation, 1, condition)
-    return np.mean((y - observation) ** 2) ## leaving this for moh to fix.XD 
+    return -np.mean((y - observation) ** 2) ## leaving this for moh to fix.XD 
 
 
 class CustomMCMC(BaseEstimator):
@@ -101,10 +101,16 @@ class CustomMCMC(BaseEstimator):
         # basic MCMC algorithm
         for _ in range(max_iterations):
             # sample a new equation
-            if np.random.rand() < 0.5:
+            methods_sampler = np.random.choice(['node_replacement', 'root_addition', 'root_removal' ])
+            if methods_sampler == 'node_replacement':
                 eqn = node_replacement(eqn_old.equation, self.operator_space, self.variable_space)
-            else:
+            elif methods_sampler == 'root_addition':
                 eqn = root_addition(eqn_old.equation, self.operator_space, self.variable_space)
+            elif methods_sampler == 'root_removal':
+                eqn = root_addition(eqn_old.equation, self.operator_space, self.variable_space)
+            else:
+                eqn = eqn_old.equation
+
             # eqn = node_replacement(eqn_old.equation, self.operator_space, self.variable_space)
             eqn_new = EquationFunction(eqn, idvs_names, self.operator_space, self.variable_space)
             # eqn_new = sample_equation()
