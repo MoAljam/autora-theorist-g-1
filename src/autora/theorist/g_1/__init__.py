@@ -1,17 +1,18 @@
 """
 Example Theorist
 """
-from utils import print_equation, equation_evaluator, random_equation
-from methods import node_replacement, get_variable, root_addition
+from .utils import print_equation, equation_evaluator, random_equation
+from .methods import root_addition, root_removal, node_replacement, get_variable
 from typing import Union
 
 import numpy as np
 import pandas as pd
-import math
+import matplotlib.pyplot as plt
 
 from sklearn.base import BaseEstimator
 from sklearn.preprocessing import PolynomialFeatures
 from sklearn.linear_model import LinearRegression
+
 
 
 
@@ -26,9 +27,19 @@ class EquationFunction:
         data = dict(zip(self.idvs_names, input_data))
         return equation_evaluator(self.equation, self.operator_space, self.variable_space, data)
     
+    def __str__(self):
+        return print_equation(self.equation, operator_space=self.operator_space)
+    
 
-def sample_equation(num_inputs: int=1):
-    return lambda *x: np.random.rand()
+def sample_equation_raw(curr_equation, operator_space, variable_space):
+    tree_modification_methods = [root_addition, root_removal, node_replacement]
+
+    # method = np.random.choice(tree_modification_methods)
+    # give higher probability to node_removel
+    method = np.random.choice(tree_modification_methods , p=[0.4, 0.3, 0.3])
+    print("## method: ", method.__name__)
+    eqn = method(curr_equation, operator_space, variable_space)
+    return eqn
 
 def fit_measure(equation, condition, observation):
     if observation.ndim == 1:
@@ -36,12 +47,15 @@ def fit_measure(equation, condition, observation):
     if condition.ndim == 1:
         condition = condition[:, np.newaxis]
     # mean squared error
-    # print("## equation: ", equation)
+    print("## equation: ", equation.equation)
     # print("## condition: ", condition)
     # print("## observation: ", observation)
 
     y = np.apply_along_axis(equation, 1, condition)
-    return np.mean((y - observation) ** 2) ## leaving this for moh to fix.XD 
+    # print("## y: ", y)
+    y = np.mean((y - observation) ** 2)
+    y = -y
+    return y ## leaving this for moh to fix.XD 
 
 
 class CustomMCMC(BaseEstimator):
@@ -52,7 +66,9 @@ class CustomMCMC(BaseEstimator):
         # base equation of the model
         # define the operator space
         self.operator_space = {'+': 2, '-': 2, '*':2, '/':2, 'exp':1, 'ln':1, 'pow':2}
-        #defined the variable space
+        # self.operator_space = {'+': 2, '-': 2, '*':2, '/':2, 'exp':1, 'ln':1, 'pow':2, 'cons':0}
+
+        # defined the variable space
         # cons: constant
         # eqn: is another equation, will cause a child fit process to run. 
         # self.temp_variable_space = ['cons', 'eqn']
@@ -60,11 +76,11 @@ class CustomMCMC(BaseEstimator):
 
 
         # self.equation = lambda *args: None
-        self.equation = None
+        self.model = None
 
 
     def fit(self, conditions: Union[pd.DataFrame, np.ndarray], observations: Union[pd.DataFrame, np.ndarray],
-            max_iterations: int=100):
+            max_iterations: int=1000):
         #add independant variables to varable_space
         
 
@@ -92,38 +108,48 @@ class CustomMCMC(BaseEstimator):
 
         self.variable_space = idvs_names + self.temp_variable_space
 
-        rand_eqn = random_equation(self.operator_space, self.variable_space, min_length=5, max_length=10)
+        rand_eqn_raw = random_equation(self.operator_space, self.variable_space, min_length=2, max_length=5)
         # rand_eqn = ['ln', "/",'cons', idvs_names[0]]
-        eqn_old = EquationFunction(rand_eqn, idvs_names, self.operator_space, self.variable_space)
+        eqn_old = EquationFunction(rand_eqn_raw, idvs_names, self.operator_space, self.variable_space)
 
         fit_old = fit_measure(eqn_old, x, y)
 
+        fit_values = [fit_old]
         # basic MCMC algorithm
         for _ in range(max_iterations):
             # sample a new equation
-            if np.random.rand() < 0.5:
-                eqn = node_replacement(eqn_old.equation, self.operator_space, self.variable_space)
-            else:
-                eqn = root_addition(eqn_old.equation, self.operator_space, self.variable_space)
+            eqn_raw = sample_equation_raw(eqn_old.equation, self.operator_space, self.variable_space)
             # eqn = node_replacement(eqn_old.equation, self.operator_space, self.variable_space)
-            eqn_new = EquationFunction(eqn, idvs_names, self.operator_space, self.variable_space)
+            eqn_new = EquationFunction(eqn_raw, idvs_names, self.operator_space, self.variable_space)
             # eqn_new = sample_equation()
             # calculate the fit measure
             fit_new = fit_measure(eqn_new, x, y)
             # calculate the acceptance probability
-            acceptance_prob = np.exp(fit_new - fit_old)
+            try:
+                acceptance_prob = np.exp(fit_new - fit_old)
+            except:
+                acceptance_prob = 0
 
             # accept the new equation with the acceptance probability
             if np.random.rand() < acceptance_prob:
                 eqn_old = eqn_new
                 fit_old = fit_new
+                fit_values.append(fit_new)
 
-        self.equation = eqn_old
+        self.model = eqn_old
+
+        fit_values = np.array(fit_values)
+        # print("## fit_values: ", fit_values)
+        # remove problematic values
+        fit_values_plot = fit_values[~np.isnan(fit_values) & ~np.isinf(fit_values)]
+        plt.plot(fit_values_plot)
+        plt.title("Fit values")
+        plt.show()
 
         return self
     
     def predict(self, conditions: Union[pd.DataFrame, np.ndarray]):
-        if self.equation is None:
+        if self.model is None:
             raise ValueError("Model not fitted yet. Run the fit method first")
         
         if isinstance(conditions, np.ndarray) and conditions.ndim == 1:
@@ -131,7 +157,7 @@ class CustomMCMC(BaseEstimator):
         if isinstance(conditions, pd.DataFrame):
             conditions = conditions.values
 
-        y = np.apply_along_axis(self.equation, 1, conditions)
+        y = np.apply_along_axis(self.model, 1, conditions)
         # make sure the output is of shape (n_outputs, 1)
         if y.ndim == 1:
             y = y[:, np.newaxis]
@@ -139,7 +165,7 @@ class CustomMCMC(BaseEstimator):
 
     def print_eqn(self):
         # equation = ['+', 'a','b']
-        print("## equation: ", self.equation.equation)
-        equation = print_equation(self.equation.equation, operator_space=self.operator_space)
+        # print("## equation: ", self.model.equation)
+        equation = print_equation(self.model.equation, operator_space=self.operator_space)
 
         return equation
