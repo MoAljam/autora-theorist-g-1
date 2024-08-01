@@ -62,9 +62,10 @@ class CustomMCMC(BaseEstimator):
     """
     Custom MCMC model
     """
-    def __init__(self):
+    def __init__(self, max_eqn_length=20):
         # base equation of the model
         # define the operator space
+        self.max_eqn_length = max_eqn_length
         self.operator_space = {'+': 2, '-': 2, '*':2, '/':2, 'exp':1, 'ln':1, 'pow':2}
         # self.operator_space = {'+': 2, '-': 2, '*':2, '/':2, 'exp':1, 'ln':1, 'pow':2, 'cons':0}
 
@@ -117,8 +118,11 @@ class CustomMCMC(BaseEstimator):
         fit_values = [fit_old]
         # basic MCMC algorithm
         for _ in range(max_iterations):
-            # sample a new equation
-            eqn_raw = sample_equation_raw(eqn_old.equation, self.operator_space, self.variable_space)
+            if len(eqn_old.equation) > self.max_eqn_length:
+                eqn_raw =root_removal(eqn_old.equation, self.operator_space, self.variable_space)
+            else:
+                # sample a new equation
+                eqn_raw = sample_equation_raw(eqn_old.equation, self.operator_space, self.variable_space)
             # eqn = node_replacement(eqn_old.equation, self.operator_space, self.variable_space)
             eqn_new = EquationFunction(eqn_raw, idvs_names, self.operator_space, self.variable_space)
             # eqn_new = sample_equation()
