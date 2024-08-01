@@ -47,6 +47,28 @@ def get_variable(variable_space, count=1):
 
 def root_addition(curr_equation, operator_space, variable_space):
 
+    """
+    Add a new operator and variable (if necessary) to the current equation.
+
+    Args:
+        curr_equation (list): Current equation represented as a list of strings.
+        operator_space (dict): Dictionary where keys are operators and values are their arity.
+        variable_space (list): List of possible variables to include in the equation.
+
+    Returns:
+        list: A new equation with the added operator and possibly a new variable.
+
+
+    Example:
+        >>> import numpy as np
+        >>> np.random.seed(0)
+        >>> #curr_equation = ['+', '2', '1']
+        >>> #operator_space = {'+': 2, '-': 2, '*':2, '/':2, 'exp':1, 'ln':1, 'pow':2}
+        >>> #variable_space = ['cons', 'eqn', '1', '2']
+        >>> #root_addition(curr_equation, operator_space, variable_space)
+        ['*', '+', '2', '1', 'eqn']
+
+    """
     
     # Randomly choose an operator to add
     new_operator = np.random.choice(list(operator_space.keys()))
