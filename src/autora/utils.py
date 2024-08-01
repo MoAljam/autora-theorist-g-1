@@ -112,3 +112,11 @@ def random_equation(operator_space, variable_space, min_length=5, max_length=10)
     # print("## final eq: ", equation ### final open_counter: ", open_counter)
 
     return equation
+
+def replace_cons_eqn(equation):
+    for i in range(0, len(equation)):
+        if equation[i] == 'eqn':
+            equation[i] = random_equation(equation, equation, min_length=3, max_length=10)
+        elif equation[i] == 'cons':
+            equation[i] = np.random.random()
+    return equation

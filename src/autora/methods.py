@@ -1,4 +1,5 @@
 import numpy as np
+from utils import random_equation, replace_cons_eqn
 
 def node_replacement(curr_equation, operator_space, variable_space):
     """
@@ -36,6 +37,9 @@ def node_replacement(curr_equation, operator_space, variable_space):
     new_equation = curr_equation.copy()
     new_equation[replace_pos] = replace_node
 
+    if ('cons' in new_equation) or ('eqs' in new_equation):
+        replace_cons_eqn(new_equation)
+
     return new_equation
 
 def get_variable(variable_space, count=1):
@@ -69,7 +73,9 @@ def root_addition(curr_equation, operator_space, variable_space):
     if operator_type == 2:
         # Add a new variable to the end of the equation if the operator arity is 2
         new_equation = new_equation + [(np.random.choice(variable_space))]
-       
+
+    if ('cons' in new_equation) or ('eqs' in new_equation):
+        replace_cons_eqn(new_equation)
 
     return new_equation
 
