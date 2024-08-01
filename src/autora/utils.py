@@ -56,11 +56,17 @@ def equation_evaluator(equation, operator_space, variable_space, data):
             elif equation[i] == '*':
                 stack.append((variables[0] * variables[1]))
             elif equation[i] == '/':
-                stack.append((variables[0] / variables[1]))
+                if not variables[1] == 0:
+                    stack.append((variables[0] / variables[1]))
+                else:
+                    return(-math.inf)
             elif equation[i] == 'exp':
                 stack.append(np.exp(variables[0]))
             elif equation[i] == 'ln':
-                stack.append(np.log(variables[0]))
+                if not variables[0] == 0:
+                    stack.append(np.log(variables[0]))
+                else:
+                    return(-math.inf)
             elif equation[i] == 'pow':
                 stack.append(np.power(variables[0] ,variables[1]))
         i -=1
