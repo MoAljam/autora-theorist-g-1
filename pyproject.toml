@@ -1,8 +1,8 @@
 [project]
 # UPDATE THIS BEFORE PUBLISHING
-name = "g_1"
+name = "g_1 theorist"
 description = "Describe your contribution"
-authors = [{ name = "Mj", email = "maljammal@uni-osnabrueck.de" }]
+authors = []
 dynamic = ["version"]
 
 readme = "README.md"
@@ -22,10 +22,10 @@ dev = [
 
 test = [
     "pytest",
+    "hypothesis"
 ]
 
 [project.urls]
-homepage = "http://www.empiricalresearch.ai"
 repository = "https://github.com/MoAljam/autora-theorist-g-1"
 documentation = "https://MoAljam.github.io/autora-theorist-g-1/"
 
