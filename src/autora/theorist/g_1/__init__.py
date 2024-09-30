@@ -53,7 +53,11 @@ def fit_measure(equation, condition, observation):
 
     y = np.apply_along_axis(equation, 1, condition)
     # print("## y: ", y)
-    y = np.mean((y - observation) ** 2)
+    try:
+        y = np.mean((y - observation) ** 2)
+    except:
+        print("## error in fit_measure")
+        y = np.inf
     y = -y
     return y ## leaving this for moh to fix.XD 
 
@@ -125,6 +129,7 @@ class CustomMCMC(BaseEstimator):
             print("##--------------------- iteration: ", i)
             len_eqn = len(eqn_old.equation)
             print("## len_eqn: ", len_eqn)
+            print("## eqn_old: ", eqn_old.equation)
             if len_eqn > self.max_eqn_length:
                 eqn_raw =root_removal(eqn_old.equation, self.operator_space, self.variable_space)
             else:
@@ -136,23 +141,37 @@ class CustomMCMC(BaseEstimator):
             # calculate the fit measure
             fit_new = fit_measure(eqn_new, x, y)
             # calculate the acceptance probability
-            try:
-                acceptance_prob = np.exp(fit_new - fit_old)
-            except:
-                acceptance_prob = 0
+            fit_diff = fit_new - fit_old
+            beta = 2
+            if fit_diff > 0:
+                acceptance_prob = 1.1 # always accept the better equation
+            else:
+                # acceptance_prob = 0.2
+                try:
+                    # acceptance_prob = np.exp(fit_diff * beta) # accept the worse equation with exp probability of the difference
+                    acceptance_prob = 1/(1 + np.exp(-fit_diff * beta))
+                except:
+                    acceptance_prob = 0
+
+            print("## fit_old: ", fit_old)
+            print("## fit_new: ", fit_new)
             print("## acceptance_prob: ", acceptance_prob)
             # accept the new equation with the acceptance probability
             if np.random.rand() < acceptance_prob:
                 eqn_old = eqn_new
                 fit_old = fit_new
                 fit_values.append(fit_new)
+                print("## accepted")
 
         self.model = eqn_old
+        print("## model's equation: ", eqn_old.equation)
+        print("## model's fit: ", fit_old)
 
         fit_values = np.array(fit_values)
         # print("## fit_values: ", fit_values)
         # remove problematic values
         fit_values_plot = fit_values[~np.isnan(fit_values) & ~np.isinf(fit_values)]
+        print("## fit_values_plot: ", fit_values)
         plt.plot(fit_values_plot)
         plt.title("Fit values")
         plt.show()

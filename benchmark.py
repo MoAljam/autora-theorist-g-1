@@ -2,13 +2,16 @@
 from src.autora.theorist.g_1 import CustomMCMC
 
 import autora.state as state
+
 # experiment_runner
 from autora.experiment_runner.synthetic.psychophysics.weber_fechner_law import weber_fechner_law
 from autora.experiment_runner.synthetic.psychophysics.stevens_power_law import stevens_power_law
 from autora.experiment_runner.synthetic.economics.expected_value_theory import expected_value_theory
+
 # experimentalist
 from autora.experimentalist.grid import grid_pool
 from autora.experimentalist.random import random_pool, random_sample
+
 # experiment_runner
 from autora.experiment_runner.synthetic.psychology.exp_learning import exp_learning
 from autora.experiment_runner.synthetic.psychology.luce_choice_ratio import luce_choice_ratio
@@ -24,6 +27,7 @@ from sklearn.linear_model import LinearRegression
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+
 
 def benchmark(experiment_runner, theorist):
 
@@ -42,7 +46,9 @@ def benchmark(experiment_runner, theorist):
     observations = experiment_data[dvs]
 
     # split into train and test datasets
-    conditions_train, conditions_test, observations_train, observations_test = train_test_split(conditions, observations)
+    conditions_train, conditions_test, observations_train, observations_test = train_test_split(
+        conditions, observations
+    )
 
     # print("#### EXPERIMENT CONDITIONS (X):")
     # print(conditions)
@@ -63,11 +69,11 @@ def benchmark(experiment_runner, theorist):
     error = np.power(predictions - observations_test.values, 2)
     error = np.mean(error)
 
-    #check if the theorist has a print_eqn method
-    if hasattr(theorist, 'print_eqn'):
+    # check if the theorist has a print_eqn method
+    if hasattr(theorist, "print_eqn"):
         print("#### IDENTIFIED EQUATION:")
         print(theorist.print_eqn())
-    
+
     if isinstance(theorist, CustomMCMC):
         print(theorist.model.equation)
 
@@ -78,12 +84,12 @@ def benchmark(experiment_runner, theorist):
         conds = conds.values
     res = np.apply_along_axis(theorist.model, 1, conds)
     plt.plot(conds, res, label="costum plot")
-    plt.savefig("costum_plot.png")
     plt.show()
 
     experiment_runner.plotter(model=theorist)
     # plt.show()
     return error
+
 
 class PolynomialRegressor:
     """
@@ -91,17 +97,17 @@ class PolynomialRegressor:
     """
 
     def __init__(self, degree: int = 3):
-      self.poly = PolynomialFeatures(degree=degree, include_bias=False)
-      self.model = LinearRegression()
+        self.poly = PolynomialFeatures(degree=degree, include_bias=False)
+        self.model = LinearRegression()
 
     def fit(self, x, y):
-      features = self.poly.fit_transform(x, y)
-      self.model.fit(features, y)
-      return self
+        features = self.poly.fit_transform(x, y)
+        self.model.fit(features, y)
+        return self
 
     def predict(self, x):
-      features = self.poly.fit_transform(x)
-      return self.model.predict(features)
+        features = self.poly.fit_transform(x)
+        return self.model.predict(features)
 
     def print_eqn(self):
         # Extract the coefficients and intercept
@@ -126,16 +132,16 @@ class PolynomialRegressor:
 
 if __name__ == "__main__":
 
-    my_theorist = CustomMCMC(max_eqn_length=40 ,max_iterations=1000)
+    my_theorist = CustomMCMC(max_eqn_length=40, max_iterations=100)
     # my_theorist = PolynomialRegressor()
 
     # run benchmark
-    mse_model_0 = benchmark(experiment_runner = stevens_power_law(), theorist = my_theorist)
+    mse_model_0 = benchmark(experiment_runner=stevens_power_law(), theorist=my_theorist)
 
     print("******* MSE model 0: ", mse_model_0)
     print("******* model 0: ", my_theorist.model.equation)
 
-    mse_model_1 = benchmark(experiment_runner = exp_learning(), theorist = my_theorist)
+    mse_model_1 = benchmark(experiment_runner=exp_learning(), theorist=my_theorist)
 
     print("******* MSE model 1: ", mse_model_1)
     print("******* model 1: ", my_theorist.model.equation)
