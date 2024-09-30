@@ -11,11 +11,11 @@ def node_replacement(curr_equation, operator_space, variable_space):
     array with updated equation in prefix notation, i.e. with added node
 
     Example:
-        >>> #np.random.seed(42)
-        >>> #curr_equation = ['+', '2', '1']
-        >>> #operator_space = {'+': 2, '-': 2, '*':2, '/':2, 'exp':1, 'ln':1, 'pow':2}
-        >>> #variable_space = ['cons', 'eqn', '1', '2']
-        >>> #node_replacement(curr_equation, operator_space, variable_space)
+        >>> np.random.seed(42)
+        >>> curr_equation = ['+', '2', '1']
+        >>> operator_space = {'+': 2, '-': 2, '*':2, '/':2, 'exp':1, 'ln':1, 'pow':2}
+        >>> variable_space = ['cons', 'eqn', '1', '2']
+        >>> node_replacement(curr_equation, operator_space, variable_space)
         ['+', '2', '2']
     """
 
@@ -54,11 +54,11 @@ def get_variable(variable_space, count=1):
 def root_addition(curr_equation, operator_space, variable_space):
     """"
     Example:
-        >>> #np.random.seed(42)
-        >>> #curr_equation = ['+', '2', '1']
-        >>> #operator_space = {'+': 2, '-': 2, '*':2, '/':2, 'exp':1, 'ln':1, 'pow':2}
-        >>> #variable_space = ['cons', 'eqn', '1', '2']
-        >>> #root_addition(curr_equation, operator_space, variable_space)
+        >>> np.random.seed(42)
+        >>> curr_equation = ['+', '2', '1']
+        >>> operator_space = {'+': 2, '-': 2, '*':2, '/':2, 'exp':1, 'ln':1, 'pow':2}
+        >>> variable_space = ['cons', 'eqn', '1', '2']
+        >>> root_addition(curr_equation, operator_space, variable_space)
         ['pow', '+', '2', '1', '2']
     """
 
@@ -83,11 +83,11 @@ def root_addition(curr_equation, operator_space, variable_space):
 def root_removal(curr_equation, operator_space, variable_space):
     """
     Example:
-        >>> #np.random.seed(42)
-        >>> #curr_equation = ['+', '2', '1']
-        >>> #operator_space = {'+': 2, '-': 2, '*':2, '/':2, 'exp':1, 'ln':1, 'pow':2}
-        >>> #variable_space = ['cons', 'eqn', '1', '2']
-        >>> #root_removal(curr_equation, operator_space, variable_space)
+        >>> np.random.seed(42)
+        >>> curr_equation = ['+', '2', '1']
+        >>> operator_space = {'+': 2, '-': 2, '*':2, '/':2, 'exp':1, 'ln':1, 'pow':2}
+        >>> variable_space = ['cons', 'eqn', '1', '2']
+        >>> root_removal(curr_equation, operator_space, variable_space)
         ['+', '2', '1']
     """
 
