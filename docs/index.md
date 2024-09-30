@@ -1,23 +1,18 @@
 # g-1
 
-Explain what your contribution is doing here
+Explain what your contribution is doing here:
 
-You can include inline mathematics by wrapping LaTeX formatted math in `$` symbols: `$(3 < 4)$` will render as:  $(3 < 4)$
+a description of the search algorithm, and how the goodness of the equation was determined?
+>Using MCMC sampling to find the equation. 
+>>Starting from a random equation.
+>>Sample method: node replacement, root addition and root removal
+>>Sample operators in operator space
+>>Updating equation accordingly and comparing performance of new equation to original equation.
 
-To include block mathematics wrap the expression with double `$$`:
+which search space was used and how was the search otherwise constrained?
+> The length of the equation was constrained to be less than 40 symbols.
 
-```
-$$
-E(\mathbf{v}, \mathbf{h}) = -\sum_{i,j}w_{ij}v_i h_j - \sum_i b_i v_i - \sum_j c_j h_j
-$$
-```
-
-Will render as:
-
-$$
-E(\mathbf{v}, \mathbf{h}) = -\sum_{i,j}w_{ij}v_i h_j - \sum_i b_i v_i - \sum_j c_j h_j
-$$
-
+>The operator space can be defined to only use the certain operators and not all the operators
 
 See more information on writing mathematical expressions [here](https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/writing-mathematical-expressions). 
 
