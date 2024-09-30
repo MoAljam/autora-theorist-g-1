@@ -1,6 +1,6 @@
 [project]
 # UPDATE THIS BEFORE PUBLISHING
-name = "g_1 theorist"
+name = "g_1-theorist"
 description = "Describe your contribution"
 authors = []
 dynamic = ["version"]
